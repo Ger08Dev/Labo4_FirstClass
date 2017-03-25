@@ -3,8 +3,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
-//require 'PHP/Clases/AccesoDatos.php';
-//require 'PHP/Clases/Persona.php';
+require 'PHP/Clases/Personas.php';
 
 $app = new \Slim\App;
 $app->get('/hello/{name}', function (Request $request, Response $response) {
@@ -14,7 +13,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response) {
     return $response;
 });
 
-//-- metodo 
+//-- metodo default
 $app->get('/', function (Request $request, Response $response) {
     //$name = $request->getAttribute('name');
     $response->getBody()->write("Hola mundo!!");
@@ -22,12 +21,86 @@ $app->get('/', function (Request $request, Response $response) {
     return $response;
 });
 
-$app = new \Slim\App;
-$app->get('/hello/{name}', function (Request $request, Response $response) {
-    $name = $request->getAttribute('name');
-    $response->getBody()->write("Hola, soy la hermosa de $name");
+
+
+// -- metodo traer todas las personas
+$app->get('/personas[/]', function (Request $request, Response $response) {
+
+	$Listado = Persona::TraerTodasLasPersonas();
+	$listadoEncodeadoEnJson = json_encode($Listado);
+    $response->write($listadoEncodeadoEnJson);
 
     return $response;
 });
 
+
+
+
+// -- metodo traer una persona por id
+$app->get('/persona[/]', function ($request, $response, $args) {
+
+	$datosPost = $request->getQueryParams(); //tomo lo que le mande por parametro y lo parse a php
+
+    $unaPersona = Persona::TraerUnaPersona($datosPost['id']);
+    $unaPersonaEncodeadaEnJson = json_encode($unaPersona);
+    $response->write($unaPersonaEncodeadaEnJson);
+
+    return $response;
+});
+
+
+
+
+// -- metodo recibe una parsona y da de alta
+$app->post('/persona[/]', function ($request, $response, $args) {
+	$datosPost = $request->getQueryParams(); //tomo lo que le mande por parametro y lo parse a php
+
+    //armo el objeto persona
+    $unaPersona = new Persona();
+    $unaPersona->nombre = $datosPost['nombre'];
+    $unaPersona->apellido = $datosPost['apellido'];
+    $unaPersona->dni = $datosPost['dni'];
+    $unaPersona->foto = $datosPost['foto'];
+
+  	 Persona::InsertarPersona($unaPersona);
+   
+    $response->write("Persona insertada con exito -->");
+    return $response;
+});
+
+
+
+// -- metodo borrar una persona por id
+$app->delete('/persona/{id}', function ($request, $response, $args) {
+
+	//$datosPost = $request->getQueryParams(); //tomo lo que le mande por parametro y lo parse a php
+        $datosPost = json_decode($args["id"]);
+
+    Persona::BorrarPersona($datosPost->id);
+    $response->write("Persona Borrada con exito");
+    return $response;
+});
+
+
+// -- metodo recibe una parsona y la modifica
+$app->put('/persona/{persona}', function ($request, $response, $args) {
+	//$datosPost = $request->getQueryParams(); //tomo lo que le mande por parametro y lo parse a php
+    $datosPost = json_decode($args["persona"]);
+
+    //armo el objeto persona
+    $unaPersona = new Persona();
+    $unaPersona->id = $datosPost->id;
+    $unaPersona->nombre = $datosPost->nombre;
+    $unaPersona->apellido = $datosPost->apellido;
+    $unaPersona->dni = $datosPost->dni;
+    $unaPersona->foto = $datosPost->foto;
+
+    Persona::ModificarPersona($unaPersona);
+    $response->write("Persona modificada con exito");
+    return $response;
+});
+
+
 $app->run();
+
+?>

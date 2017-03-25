@@ -1,5 +1,5 @@
 <?php
-require_once"accesoDatos.php";
+require_once "AccesoDatos.php";
 class Persona
 {
 //--------------------------------------------------------------------------------//
@@ -81,23 +81,20 @@ class Persona
 //--METODO DE CLASE
 	public static function TraerUnaPersona($idParametro) 
 	{	
-
-
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		//$consulta =$objetoAccesoDato->RetornarConsulta("select * from persona where id =:id");
-		$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerUnaPersona(:id)");
+		$consulta =$objetoAccesoDato->RetornarConsulta("select * from persona where id =:id");
+        //$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerUnaPersona(:id)");
 		$consulta->bindValue(':id', $idParametro, PDO::PARAM_INT);
 		$consulta->execute();
 		$personaBuscada= $consulta->fetchObject('persona');
-		return $personaBuscada;	
-					
+		return $personaBuscada;						
 	}
 	
 	public static function TraerTodasLasPersonas()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		//$consulta =$objetoAccesoDato->RetornarConsulta("select * from persona");
-		$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerTodasLasPersonas() ");
+		$consulta =$objetoAccesoDato->RetornarConsulta("select * from persona");
+		//$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerTodasLasPersonas() ");
 		$consulta->execute();			
 		$arrPersonas= $consulta->fetchAll(PDO::FETCH_CLASS, "persona");	
 		return $arrPersonas;
@@ -106,8 +103,8 @@ class Persona
 	public static function BorrarPersona($idParametro)
 	{	
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		//$consulta =$objetoAccesoDato->RetornarConsulta("delete from persona	WHERE id=:id");	
-		$consulta =$objetoAccesoDato->RetornarConsulta("CALL BorrarPersona(:id)");	
+		$consulta =$objetoAccesoDato->RetornarConsulta("delete from persona	WHERE id=:id");	
+        //$consulta =$objetoAccesoDato->RetornarConsulta("CALL BorrarPersona(:id)");	
 		$consulta->bindValue(':id',$idParametro, PDO::PARAM_INT);		
 		$consulta->execute();
 		return $consulta->rowCount();
@@ -141,8 +138,8 @@ class Persona
 	public static function InsertarPersona($persona)
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		//$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into persona (nombre,apellido,dni,foto)values(:nombre,:apellido,:dni,:foto)");
-		$consulta =$objetoAccesoDato->RetornarConsulta("CALL InsertarPersona (:nombre,:apellido,:dni,:foto)");
+		$consulta =$objetoAccesoDato->RetornarConsulta("INSERT into persona (nombre,apellido,dni,foto)values(:nombre,:apellido,:dni,:foto)");
+        //$consulta =$objetoAccesoDato->RetornarConsulta("CALL InsertarPersona (:nombre,:apellido,:dni,:foto)");
 		$consulta->bindValue(':nombre',$persona->nombre, PDO::PARAM_STR);
 		$consulta->bindValue(':apellido', $persona->apellido, PDO::PARAM_STR);
 		$consulta->bindValue(':dni', $persona->dni, PDO::PARAM_STR);
@@ -152,46 +149,7 @@ class Persona
 	
 				
 	}	
-//--------------------------------------------------------------------------------//
 
-
-
-	public static function TraerPersonasTest()
-	{
-		$arrayDePersonas=array();
-
-		$persona = new stdClass();
-		$persona->id = "4";
-		$persona->nombre = "rogelio";
-		$persona->apellido = "agua";
-		$persona->dni = "333333";
-		$persona->foto = "333333.jpg";
-
-		//$objetJson = json_encode($persona);
-		//echo $objetJson;
-		$persona2 = new stdClass();
-		$persona2->id = "5";
-		$persona2->nombre = "Bañera";
-		$persona2->apellido = "giratoria";
-		$persona2->dni = "222222";
-		$persona2->foto = "222222.jpg";
-
-		$persona3 = new stdClass();
-		$persona3->id = "6";
-		$persona3->nombre = "Julieta";
-		$persona3->apellido = "Roberto";
-		$persona3->dni = "888888";
-		$persona3->foto = "888888.jpg";
-
-		$arrayDePersonas[]=$persona;
-		$arrayDePersonas[]=$persona2;
-		$arrayDePersonas[]=$persona3;
-		 
-		
-
-		return  $arrayDePersonas;
-				
-	}	
 
 
 }
