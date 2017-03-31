@@ -1,10 +1,10 @@
-import { Clase3Page } from './app.po';
+import { Clase3NuevaPage } from './app.po';
 
-describe('clase3 App', function() {
-  let page: Clase3Page;
+describe('clase3-nueva App', function() {
+  let page: Clase3NuevaPage;
 
   beforeEach(() => {
-    page = new Clase3Page();
+    page = new Clase3NuevaPage();
   });
 
   it('should display message saying app works', () => {
